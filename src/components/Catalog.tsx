@@ -1,4 +1,4 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IBook } from "@/interfaces/book";
 import {
@@ -16,7 +16,7 @@ import {
 //   DropdownMenuContent,
 //   DropdownMenuItem,
 // } from "./ui/dropdown-menu";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { bookService } from "@/services/book";
 
 export default function Catalog() {
@@ -31,7 +31,7 @@ export default function Catalog() {
 
   // console.log(query.data);
 
-  const { q } = useParams();
+  // const { q } = useParams();
 
   // setParams(search);
 
