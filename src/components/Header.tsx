@@ -1,39 +1,53 @@
-import { useAtomValue } from "jotai";
+import { useAtomValue, useAtom } from "jotai";
 import { userAtom } from "@/context/user";
+import { searchAtom } from "@/context/book";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { Input } from "./ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "./ui/input";
+import { useNavigate, useLocation } from "react-router-dom";
+import React from "react";
 
 export default function Header() {
-  const user = useAtomValue(userAtom);
+  const navigate = useNavigate();
+  const location = useLocation();
   const { handleLogout } = useAuth();
+  const user = useAtomValue(userAtom);
+  const [searchQuery, setSearchQuery] = useAtom(searchAtom);
+
+  function handleOnChange(input: React.KeyboardEvent) {
+    if (input.key === "Enter") {
+      searchQuery ? navigate(`?q=${searchQuery}`) : navigate("");
+    }
+  }
 
   return (
-    <>
-      <header className="sticky top-0 flex items-center justify-between p-4 bg-stone-900 z-10">
-        <div>
-          <Input className="bg-stone-800 border-none" />
-        </div>
+    <header className="sticky top-0 flex justify-center p-4 bg-stone-900 z-10">
+      <div className="flex-1 max-w-[1440px] flex gap-4 items-center justify-between">
+        <Link to={"/"}>
+          <h1 className="text-xl font-mono uppercase">Library</h1>
+        </Link>
+        {location.pathname === "/" && (
+          <Input
+            placeholder="Search book"
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleOnChange}
+            className="w-full bg-stone-950 border-none md:w-[300px]"
+          />
+        )}
         <div className="flex items-center justify-center gap-1">
-          <Avatar>
-            <AvatarImage
-              src={`${
-                import.meta.env.VITE_BASE_API_URL
-              }/imgs/profile/Bonbon.svg`}
-            />
-            <AvatarFallback>{user?.display_name?.slice(0, 1)}</AvatarFallback>
-          </Avatar>
-
-          <Link
-            to={"/login"}
-            onClick={handleLogout}
-            className="text-stone-100 bg-stone-500 rounded-md px-3 py-2"
-          >
-            Logout
+          <Link to={"/login"} onClick={handleLogout}>
+            <Avatar>
+              <AvatarImage
+                src={`${
+                  import.meta.env.VITE_BASE_API_URL
+                }/imgs/profile/Bonbon.svg`}
+              />
+              <AvatarFallback>{user?.display_name?.slice(0, 1)}</AvatarFallback>
+            </Avatar>
           </Link>
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 }

@@ -19,8 +19,6 @@ const router = createBrowserRouter([
     path: "/",
     loader: async () => {
       const res = await sessionService.isValidUser();
-      // console.log(res);
-      // res.json().then((data) => console.log(data));
 
       if (res.status !== 200) {
         return redirect("/login");
@@ -63,13 +61,18 @@ const router = createBrowserRouter([
   },
   {
     path: "/book/:id",
+    loader: async () => {
+      const res = await sessionService.isValidUser();
+      if (res.status !== 200) return redirect("/");
+
+      return null;
+    },
     element: <DetailBook />,
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {/* <App /> */}
     <RouterProvider router={router} />
   </React.StrictMode>
 );

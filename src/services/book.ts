@@ -1,7 +1,9 @@
+import Cookies from "js-cookie";
+
 export const bookService = {
-  getBooks: async () => {
+  getBooks: async (q: string) => {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books`
+      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books${q}`
     );
 
     if (!response.ok) throw new Error("Network error.");
@@ -9,7 +11,6 @@ export const bookService = {
     return response.json();
   },
   getBook: async (id: string) => {
-    console.log("getBook called");
     const response = await fetch(
       `${import.meta.env.VITE_BASE_API_URL}/api/v1/books/${id}`
     );
@@ -18,18 +19,43 @@ export const bookService = {
 
     return response.json();
   },
-  borrowBook: async (id: string, curentQty: number) => {
+  getBorrowedBooks: async () => {
     const response = await fetch(
-      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books/${id}`,
+      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books/borrowed`
+    );
+
+    return await response.json();
+  },
+  borrowBook: async (bookId: string, userId: string) => {
+    return await fetch(
+      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books/${bookId}/borrow`,
       {
-        method: "PATCH",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ qty: curentQty - 1 }),
+        body: JSON.stringify({
+          borrower: userId,
+          book: bookId,
+          token: Cookies.get("token"),
+        }),
       }
     );
-
-    if (!response.ok) throw new Error("Network error.");
+  },
+  returnBook: async (bookId: string, userId: string) => {
+    return await fetch(
+      `${import.meta.env.VITE_BASE_API_URL}/api/v1/books/${bookId}/return`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          borrower: userId,
+          book: bookId,
+          token: Cookies.get("token"),
+        }),
+      }
+    );
   },
 };

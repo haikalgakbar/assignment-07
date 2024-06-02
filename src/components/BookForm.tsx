@@ -32,8 +32,10 @@ export const BookForm = () => {
       desc: "",
       isbn: "",
       author: "",
+      publish_date: "",
+      language: "",
+      pages: "",
       cover_url: undefined,
-      qty: "",
     },
   });
 
@@ -53,8 +55,10 @@ export const BookForm = () => {
     formData.append("desc", values.desc);
     formData.append("isbn", values.isbn);
     formData.append("author", values.author);
+    formData.append("publish_date", values.publish_date);
+    formData.append("language", values.language);
     formData.append("cover_url", values.cover_url[0]);
-    formData.append("qty", values.qty.toString());
+    formData.append("pages", values.pages.toString());
 
     const response = await fetch(
       `${import.meta.env.VITE_BASE_API_URL}/api/v1/books`,
@@ -84,14 +88,13 @@ export const BookForm = () => {
         onSubmit={form.handleSubmit(() =>
           mutation.mutate({ ...form.getValues() })
         )}
-        // onSubmit={form.handleSubmit(() => handleSubmit(form.getValues()))}
         encType="multipart/form-data"
       >
         <Card className="bg-stone-900 text-stone-100 border-none">
           <CardHeader className="p-4 pb-2">
             <CardTitle>New book</CardTitle>
             <CardDescription className="text-stone-400">
-              Add book you want to read
+              Add book to library collection
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-2 py-2 px-4">
@@ -161,6 +164,38 @@ export const BookForm = () => {
             />
             <FormField
               control={form.control}
+              name={"publish_date"}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Publish date"
+                      className="col-span-3 placeholder:text-stone-600 bg-stone-800 border-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={"language"}
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Language"
+                      className="col-span-3 placeholder:text-stone-600 bg-stone-800 border-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name={"cover_url"}
               render={({ field }) => (
                 <FormItem>
@@ -179,12 +214,12 @@ export const BookForm = () => {
             />
             <FormField
               control={form.control}
-              name={"qty"}
+              name={"pages"}
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
                     <Input
-                      placeholder="Qty"
+                      placeholder="Pages"
                       className="col-span-3 placeholder:text-stone-600 bg-stone-800 border-none"
                       {...field}
                       type="number"

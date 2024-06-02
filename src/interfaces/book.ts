@@ -10,14 +10,25 @@ import { z } from "zod";
 
 export interface IBook {
   _id?: string;
+  __v?: number;
   title: string;
   desc: string;
   isbn: string;
   author: string;
-  cover_url: null | FileList | File;
-  qty: number;
+  publish_date: string;
+  language: string;
+  cover_url: string | null | FileList | File;
+  pages: number;
+  is_available: boolean;
   created_at?: Date;
   updated_at?: Date;
+}
+
+export interface IBorrowedBook {
+  _id: string;
+  borrower: string;
+  book: string;
+  created_at: Date;
 }
 
 export const formSchema = z.object({
@@ -25,12 +36,13 @@ export const formSchema = z.object({
   desc: z.string().min(1, { message: "Description is required" }),
   isbn: z.string().min(1, { message: "ISBN is required" }),
   author: z.string().min(1, { message: "Author is required" }),
-  // cover_url: z.string().min(1, { message: "Cover URL is required" }),
+  publish_date: z.string().min(1, { message: "Publish date is required" }),
+  language: z.string().min(1, { message: "Language is required" }),
+  pages: z.string().min(1, { message: "Pages is required" }),
   cover_url: z
     .instanceof(FileList)
     // .min(1, { message: "Cover URL is required" }),
     .refine((file) => file?.length > 0, { message: "Cover URL is required" }),
-  qty: z.string().min(1, { message: "Quantity is required" }),
   // .refine((img: File) => img.size < 1_000_000, {
   //   message: "Cover URL is too large",
   // })

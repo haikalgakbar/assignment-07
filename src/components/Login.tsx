@@ -37,7 +37,7 @@ export function Login() {
   }
 
   return (
-    <>
+    <div className="flex flex-col max-w-[1440px] mx-auto min-h-dvh md:max-w-lg md:justify-center">
       <Card className="bg-stone-900 text-stone-100 border-none m-4">
         <CardHeader className="p-4 pb-2">
           <CardTitle>Login</CardTitle>
@@ -105,6 +105,6 @@ export function Login() {
           </div>
         </CardFooter>
       </Card>
-    </>
+    </div>
   );
 }
